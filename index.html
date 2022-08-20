@@ -9,7 +9,26 @@
   <script src="./script.js" defer></script>
 </head>
 <body>
-  <h1>Tic Tac Toe</h1>
-  <div class="game-board"></div>
+  <div class="end-screen-container hidden">
+    <div class="end-screen">
+      <h1>Tic Tac Toe</h1>
+      <h3>Game Over!</h3>
+      <div class="result">
+        <p>Final Result:</p>
+        <span class="winner">Player A wins!</span>
+      </div>
+      <button class="restart">Play Again</button>
+    </div>
+    <div class="wedges">
+      <div class="wedge-left"></div>
+      <div class="wedge-right"></div>
+    </div>
+  </div>
+  <div class="main">
+    <h1>Tic Tac Toe</h1>
+    <button class="restart">Restart</button>
+    <h3>Player <span class="current-player">1</span></h3>
+    <div class="game-board"></div>
+  </div>
 </body>
 </html>

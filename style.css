@@ -1,36 +1,165 @@
+@font-face {
+  font-family: "Bosk";
+  src: url("./assets/Bosk.ttf") format("truetype");
+}
+
 * {
   margin: 0;
   padding: 0;
+  box-sizing: border-box;
 }
 
 :root {
-  font-family: Arial, Helvetica, sans-serif;
+  font-family: "Bosk", Arial, Helvetica, sans-serif;
+  color: rgb(56, 56, 56);
+  --endscreen-colour: rgba(248, 248, 255, 0.959);
 }
 
 body {
+  background-color: #d8e2dc;
+  min-height: 100vh;
+}
+
+.hidden {
+  display: none;
+}
+
+.end-screen {
+  position: fixed;
+  left: 29vw;
+  z-index: 1;
+  background-color: var(--endscreen-colour);
+  width: 400px;
+  height: 85vh;
+  overflow: auto;
   display: flex;
   flex-direction: column;
   align-items: center;
-  background-color: bisque;
 }
 
-h1 {
-  margin: 50px 0 30px;
+.end-screen h1 {
+  font-size: 4rem;
+  margin-top: 100px;
+}
+
+.end-screen h3 {
+  font-size: 2rem;
+  margin-bottom: 50px;
+}
+
+.end-screen .result {
+  background-color: rgb(255, 255, 255);
+  box-shadow: 0 0 10px rgb(189, 189, 189);
+  padding: 10px 50px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.end-screen p {
+  font-size: 30px;
+}
+
+.end-screen span {
+  font-size: 25px;
+}
+
+.end-screen button {
+  margin-top: 80px;
+}
+
+.wedges {
+  position: fixed;
+  left: 29vw;
+  top: 85vh;
+  z-index: 2;
+  width: 400px;
+  display: flex;
+}
+
+.wedge-left {
+  width: 0;
+  height: 0;
+  border-style: solid;
+  border-width: 50px 200px 0 0;
+  border-color: var(--endscreen-colour) transparent transparent transparent;
+}
+
+.wedge-right {
+  width: 0;
+  height: 0;
+  border-style: solid;
+  border-width: 0 200px 50px 0;
+  border-color: transparent var(--endscreen-colour) transparent transparent;
+}
+
+.main {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  position: relative;
+}
+
+.main h1 {
+  margin-top: 50px;
+  font-size: 5rem;
+}
+
+.restart {
+  font-family: "Bosk", Arial, Helvetica, sans-serif;
+  color: rgb(56, 56, 56);
+  width: 150px;
+  height: 40px;
+  font-size: 26px;
+  border: 1px solid rgb(56, 56, 56);
+  border-radius: 8px;
+  background-color: #cacbff;
+  box-shadow: 3px 3px #acb1f4;
+}
+
+.restart:hover {
+  transform: translate(2px, 2px);
+  box-shadow: none;
+}
+
+.main h3 {
+  font-size: 2rem;
+  margin: 30px 0 10px;
 }
 
 .game-board {
-  width: 40vw;
-  height: 40vw;
-  background-color: rgb(188, 173, 255);
+  width: 50vw;
+  height: 50vw;
+  max-width: 50vh;
+  max-height: 50vh;
+  min-width: 300px;
+  min-height: 300px;
   display: grid;
   grid-template-columns: 1fr 1fr 1fr;
   grid-template-rows: 1fr 1fr 1fr;
+  gap: 1rem;
+  background-color: #ffe5d9;
+  padding: 20px 25px 25px 20px;
+  border: 1px solid rgb(161, 122, 13);
+  border-radius: 12px;
 }
 
 .cell {
-  border: 1px solid black;
+  border: 1px solid rgb(56, 56, 56);
   display: flex;
   justify-content: center;
   align-items: center;
   font-size: 3rem;
+  -webkit-user-select: none;
+  user-select: none;
+  border-radius: 12px;
+  background-color: #ffcad4;
+  box-shadow: 5px 5px #f4acb7;
+  font-size: 4rem;
+}
+
+.cell:hover,
+.cell:focus {
+  transform: translate(4px, 4px);
+  box-shadow: none;
 }
