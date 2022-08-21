@@ -11,8 +11,9 @@
 
 :root {
   font-family: "Bosk", Arial, Helvetica, sans-serif;
-  color: rgb(56, 56, 56);
   --endscreen-colour: rgba(248, 248, 255, 0.959);
+  --text-color: rgb(56, 56, 56);
+  color: var(--text-color);
 }
 
 body {
@@ -26,7 +27,7 @@ body {
 
 .end-screen {
   position: fixed;
-  left: 29vw;
+  left: calc(50vw - 200px);
   z-index: 1;
   background-color: var(--endscreen-colour);
   width: 400px;
@@ -70,7 +71,7 @@ body {
 
 .wedges {
   position: fixed;
-  left: 29vw;
+  left: calc(50vw - 200px);
   top: 85vh;
   z-index: 2;
   width: 400px;
@@ -107,11 +108,11 @@ body {
 
 .restart {
   font-family: "Bosk", Arial, Helvetica, sans-serif;
-  color: rgb(56, 56, 56);
+  color: var(--text-color);
   width: 150px;
   height: 40px;
   font-size: 26px;
-  border: 1px solid rgb(56, 56, 56);
+  border: 1px solid var(--text-color);
   border-radius: 8px;
   background-color: #cacbff;
   box-shadow: 3px 3px #acb1f4;
@@ -122,9 +123,50 @@ body {
   box-shadow: none;
 }
 
-.main h3 {
+.main .players {
+  display: flex;
+  justify-content: center;
+  gap: 30px;
+  margin: 60px 0 10px;
   font-size: 2rem;
-  margin: 30px 0 10px;
+}
+
+.main .players .next-player {
+  color: rgba(56, 56, 56, 0.329);
+}
+
+.main .players h3 {
+  font-size: 2rem;
+}
+
+.main .players input {
+  background-color: ghostwhite;
+  border: 1px solid var(--text-color);
+  border-radius: 8px;
+  padding: 0 20px;
+  font-size: 25px;
+  font-family: inherit;
+  color: var(--text-color);
+  text-align: center;
+}
+
+.main .players button {
+  width: 40px;
+  height: 40px;
+  border: 1px solid var(--text-color);
+  border-radius: 8px;
+  box-shadow: 2px 2px rgb(134, 134, 134);
+  background-color: ghostwhite;
+}
+
+.main .players button:hover {
+  transform: translate(1px, 1px);
+  box-shadow: none;
+}
+
+.main .players img {
+  width: 70%;
+  height: auto;
 }
 
 .game-board {
@@ -144,8 +186,14 @@ body {
   border-radius: 12px;
 }
 
+.game-board.disabled {
+  background-color: #e7e7e7;
+  border: 1px solid rgb(150, 150, 150);
+  padding: 24px 21px 21px 24px;
+}
+
 .cell {
-  border: 1px solid rgb(56, 56, 56);
+  border: 1px solid var(--text-color);
   display: flex;
   justify-content: center;
   align-items: center;
@@ -162,4 +210,14 @@ body {
 .cell:focus {
   transform: translate(4px, 4px);
   box-shadow: none;
+}
+
+.cell.disabled {
+  background-color: rgb(170, 170, 170);
+  box-shadow: none;
+}
+
+.cell.disabled:hover,
+.cell.disabled:focus {
+  transform: none;
 }

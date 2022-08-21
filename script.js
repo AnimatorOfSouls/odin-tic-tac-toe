@@ -1,6 +1,7 @@
 const Player = (id) => {
   let symbol;
   id == 0 ? symbol = "X" : symbol = "O";
+  let name = id;
 
   const markCell = (gameBoard, id) => {
     const cell = document.querySelector(`.cell[id="${id}"]`);
@@ -8,7 +9,15 @@ const Player = (id) => {
     gameBoard.setCell(id, symbol);
   }
 
-  return { markCell };
+  const getName = () => {
+    return name;
+  }
+
+  const setName = (n) => {
+    name = n.toString();
+  }
+
+  return { markCell, getName, setName };
 }
 
 const gameBoard = (() => {
@@ -28,7 +37,17 @@ const gameBoard = (() => {
     cells.forEach(item => item.innerText = "");
   }
 
-  return { getBoard, setCell, restart };
+  const disableBoard = () => {
+    document.querySelector(".game-board").classList.add("disabled");
+    document.querySelectorAll(".cell").forEach(cell => cell.classList.add("disabled"));
+  }
+
+  const enableBoard = () => {
+    document.querySelector(".game-board").classList.remove("disabled");
+    document.querySelectorAll(".cell").forEach(cell => cell.classList.remove("disabled"));
+  }
+
+  return { getBoard, setCell, restart, disableBoard, enableBoard };
 })();
 
 const displayController = (() => {
@@ -66,11 +85,18 @@ const displayController = (() => {
   }
 
   const processResult = (result) => {
-    console.log(result)
     switch (result.result) {
       case "CONTINUE":
-        currentPlayer == 0 ? currentPlayer = 1 : currentPlayer = 0;
-        document.querySelector(".current-player").innerText = currentPlayer + 1;
+        const players = document.querySelectorAll(".player");
+        if (currentPlayer == 0) {
+          currentPlayer = 1;
+          players[0].classList.add("next-player");
+          players[1].classList.remove("next-player");
+        } else {
+          currentPlayer = 0
+          players[0].classList.remove("next-player");
+          players[1].classList.add("next-player");
+        }
         break;
       case "DRAW":
         gameOver("Draw");
@@ -80,8 +106,8 @@ const displayController = (() => {
         break;
     }
   }
-
-  const renderGameBoard = (gameBoard) => {
+  
+  const createBoard = (gameBoard) => {
     const container = document.querySelector(".game-board");
     for (let i = 0; i < gameBoard.getBoard().length; i++) {
       const cell = document.createElement("div");
@@ -89,6 +115,7 @@ const displayController = (() => {
       cell.setAttribute("id", i);
       cell.addEventListener("click", (e) => {
         if (e.target.innerText !== "") return;
+        if (e.target.classList.contains("disabled")) return;
         players[currentPlayer].markCell(gameBoard, i);
         let result = checkResults(gameBoard);
         processResult(result);
@@ -97,10 +124,53 @@ const displayController = (() => {
     }
   }
 
+  const playerNameEditor = (e, gameBoard) => {
+    const state = e.target["id"];
+    let otherState;
+    state === "edit" ? otherState = "check" : otherState = "edit";
+
+    let input1 = document.querySelector(".player-name[id='0']").value.trim()
+    let input2 = document.querySelector(".player-name[id='1']").value.trim()
+    if (state === "check" && (input1.length == 0 || input2.length == 0)) { 
+      alert("Player name cannot be empty!");
+      return;
+    }
+    
+    document.querySelector(`img[id="${otherState}"]`).classList.remove("hidden");
+    e.target.classList.add("hidden");
+
+    document.querySelectorAll("input.player-name").forEach((e) => {
+      if (state === "edit") {
+        e.classList.remove("hidden");
+        gameBoard.disableBoard();
+        document.querySelectorAll(".player").forEach((p) => {p.classList.add("hidden")});
+      } else {
+        document.querySelector(".player[id='0']").innerText = input1;
+        document.querySelector(".player[id='1']").innerText = input2;
+
+        e.classList.add("hidden");
+        gameBoard.enableBoard();
+        document.querySelectorAll(".player").forEach(p => p.classList.remove("hidden"))
+      }
+    });
+  }
+
+  const renderGameBoard = (gameBoard) => {
+    createBoard(gameBoard);
+
+    document.querySelectorAll("input.player-name").forEach((e) => {
+      const id = e["id"];
+      document.querySelector(`.player-name[id="${id}"]`).value = `Player ${parseInt(id) + 1}`;
+    });
+
+    document.querySelector(".edit-name").addEventListener("click", (e) => { playerNameEditor(e, gameBoard) });
+  }
+
   const restartGame = () => {
     gameBoard.restart();
     currentPlayer = 0;
-    document.querySelector(".current-player").innerText = 1;
+    document.querySelector(".player[id='0']").classList.remove("next-player");
+    document.querySelector(".player[id='1']").classList.add("next-player");
     document.querySelector(".end-screen-container").classList.add("hidden");
   }
 
@@ -111,6 +181,5 @@ displayController.renderGameBoard(gameBoard);
 document.querySelectorAll(".restart").forEach((button) => {
   button.addEventListener("click", displayController.restartGame);
 });
-
 
 

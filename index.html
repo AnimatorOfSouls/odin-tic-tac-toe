@@ -27,7 +27,16 @@
   <div class="main">
     <h1>Tic Tac Toe</h1>
     <button class="restart">Restart</button>
-    <h3>Player <span class="current-player">1</span></h3>
+    <div class="players">
+      <input type="text" class="player-name hidden" id="0">
+      <h3 class="player" id="0">Player 1</h3>
+      <button class="edit-name">
+        <img src="./assets/edit.svg" id="edit">
+        <img src="assets/check.svg" id="check" class="hidden">
+      </button>
+      <input type="text" class="player-name hidden" id="1">
+      <h3 class="player next-player" id="1">Player 2</h3>
+    </div>
     <div class="game-board"></div>
   </div>
 </body>
