@@ -19,7 +19,7 @@ const Player = (id) => {
     name = n.toString();
   }
 
-  return { markCell, getName, setName };
+  return { markCell, getName, setName }
 }
 
 const gameBoard = (() => {
@@ -53,12 +53,14 @@ const gameBoard = (() => {
 })();
 
 const computer = (() => {
-  let moves = [];
+  let moves;
   let isEnabled = false;
 
-  const getIsEnabled = () => {
-    return isEnabled;
+  const moveNode = (index) => {
+    return {index, nextMoves: []};
   }
+
+  const getIsEnabled = () => { return isEnabled; }
 
   const enable = (shouldEnable) => {
     isEnabled = shouldEnable;
@@ -79,11 +81,54 @@ const computer = (() => {
   }
 
   const _generateMoves = () => {
-    console.log("heyo")
+    // The score is calculated using the minimax algorithm
+    const _generateScores = (board, move) => {
+      let playedMoves = board.filter(x => x !== "").length;
+      let player;
+      playedMoves%2 == 0 ? player = 0 : player = 1;
+      player == 0 ? board[move.index] = "X" : board[move.index] = "O";
+
+      let result = displayController.checkResults(board).result;
+      switch (result) {
+        case "WIN":
+          player == 0 ? move.score = 10 : move.score = -10;
+          break;
+        case "DRAW":
+          move.score = 0
+          break;
+        case "CONTINUE":
+          for (let i = 0; i < 9; i++) {
+            if (board[i] === "") {
+              move.nextMoves.push(_generateScores(Array.from(board), moveNode(i)));
+            }
+          }
+
+          move.score = move.nextMoves.reduce((prev, curr) => {
+            if (player == 0) return prev.score <= curr.score ? prev : curr;
+            else return prev.score > curr.score ? prev : curr;
+          }).score;
+          break;
+      }
+
+      return move;
+    }
+
+    moves = moveNode(-1);
+    for (let i = 0; i < 9; i++) {
+      moves.nextMoves.push(_generateScores(["","","","","","","","",""], moveNode(i)));
+    }
   }
 
   const makeMove = () => {
-    console.log("computer move!")
+    let currentMove = moves;
+    for (let m of displayController.getMovesTaken()) {
+      currentMove = currentMove.nextMoves.find(x => x.index === m);
+    }
+
+    let bestMove = currentMove.nextMoves.reduce((prev, curr) => {
+      return prev.score < curr.score ? prev : curr;
+    });
+    displayController.playMove(bestMove.index);
   } 
 
   return { getIsEnabled, enable, makeMove };
@@ -113,7 +158,6 @@ const displayController = (() => {
         if (currentPlayer == 0) {
           players[0].classList.add("next-player");
           players[1].classList.remove("next-player");
-          if (computer.getIsEnabled()) computer.makeMove();
         } else {
           players[0].classList.remove("next-player");
           players[1].classList.add("next-player");
@@ -128,7 +172,7 @@ const displayController = (() => {
     }
   }
 
-  const _checkResults = (board) => {
+  const checkResults = (board) => {
     function _isWin(array, startPos) {
       return array.every((value) => value === board[startPos] && value !== "");
     }
@@ -151,16 +195,22 @@ const displayController = (() => {
     return {result: "CONTINUE"};
   }
 
-  const _playMove = (cell, position) => {
+  const playMove = (position) => {
+    players[currentPlayer].markCell(position);
+    movesTaken.push(position);
+    let result = checkResults(gameBoard.getBoard());
+    _processResult(result);
+    if (result.result !== "CONTINUE") return;
+    currentPlayer == 0 ? currentPlayer = 1 : currentPlayer = 0;
+    if (computer.getIsEnabled() && currentPlayer == 1) computer.makeMove();
+  }
+
+  const _makePlayerMove = (cell, position) => {
     if (cell.innerText !== "") return;
     if (cell.classList.contains("disabled")) return;
 
     if (!computer.getIsEnabled() || currentPlayer == 0) {
-      players[currentPlayer].markCell(position);
-      movesTaken.push(position);
-      let result = _checkResults(gameBoard.getBoard());
-      _processResult(result);
-      currentPlayer == 0 ? currentPlayer = 1 : currentPlayer = 0
+      playMove(position);
     }
   }
   
@@ -170,7 +220,7 @@ const displayController = (() => {
       const cell = document.createElement("div");
       cell.classList.add("cell");
       cell.setAttribute("id", i);
-      cell.addEventListener("click", (e) => { _playMove(e.target, i) });
+      cell.addEventListener("click", (e) => { _makePlayerMove(e.target, i) });
       container.appendChild(cell);
     }
   }
@@ -232,7 +282,7 @@ const displayController = (() => {
     document.querySelector(".play-vs-computer").addEventListener("click", (e) => { computer.enable(true) });
   }
 
-  return { getMovesTaken, pushMovesTaken, getCurrentPlayer, setCurrentPlayer, renderGameBoard };
+  return { getMovesTaken, pushMovesTaken, getCurrentPlayer, setCurrentPlayer, renderGameBoard, checkResults, playMove };
 })();
 
 displayController.renderGameBoard();
