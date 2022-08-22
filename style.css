@@ -25,6 +25,8 @@ body {
   display: none;
 }
 
+/* End Screen */
+
 .end-screen {
   position: fixed;
   left: calc(50vw - 200px);
@@ -94,6 +96,8 @@ body {
   border-color: transparent var(--endscreen-colour) transparent transparent;
 }
 
+/* Main */
+
 .main {
   display: flex;
   flex-direction: column;
@@ -107,7 +111,7 @@ body {
 }
 
 .restart {
-  font-family: "Bosk", Arial, Helvetica, sans-serif;
+  font-family: inherit;
   color: var(--text-color);
   width: 150px;
   height: 40px;
@@ -121,6 +125,29 @@ body {
 .restart:hover {
   transform: translate(2px, 2px);
   box-shadow: none;
+}
+
+.main .play-vs-computer {
+  font-family: inherit;
+  margin-top: 10px;
+  font-size: 20px;
+  width: 150px;
+  height: 30px;
+  border: 1px solid var(--text-color);
+  border-radius: 8px;
+  color: var(--text-color);
+  background-color: #d9ffca;
+  box-shadow: 3px 3px #8ec581;
+}
+
+.main .play-vs-computer:hover {
+  transform: translate(2px, 2px);
+  box-shadow: none;
+}
+
+.main .play-vs-computer.hidden {
+  visibility: hidden;
+  display: block;
 }
 
 .main .players {
@@ -150,6 +177,10 @@ body {
   text-align: center;
 }
 
+.main .players input:disabled {
+  background-color: rgb(209, 209, 209);
+}
+
 .main .players button {
   width: 40px;
   height: 40px;
@@ -169,6 +200,7 @@ body {
   height: auto;
 }
 
+/* Game Board */
 .game-board {
   width: 50vw;
   height: 50vw;
