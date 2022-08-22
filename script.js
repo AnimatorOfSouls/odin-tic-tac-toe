@@ -119,7 +119,13 @@ const computer = (() => {
     }
   }
 
-  const makeMove = () => {
+  const _delay = (ms) => {
+    return new Promise(resolve => {
+      setTimeout(resolve, ms);
+    });
+  }
+
+  const makeMove = async () => {
     let currentMove = moves;
     for (let m of displayController.getMovesTaken()) {
       currentMove = currentMove.nextMoves.find(x => x.index === m);
@@ -128,6 +134,8 @@ const computer = (() => {
     let bestMove = currentMove.nextMoves.reduce((prev, curr) => {
       return prev.score < curr.score ? prev : curr;
     });
+    
+    await _delay(700);
     displayController.playMove(bestMove.index);
   } 
 
