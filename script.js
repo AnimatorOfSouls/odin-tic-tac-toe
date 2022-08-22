@@ -135,7 +135,7 @@ const computer = (() => {
       return prev.score < curr.score ? prev : curr;
     });
     
-    await _delay(700);
+    await _delay(500);
     displayController.playMove(bestMove.index);
   } 
 
@@ -172,10 +172,11 @@ const displayController = (() => {
         }
         break;
       case "DRAW":
-        _gameOver("Draw");
+        _gameOver("DRAW");
         break;
       case "WIN":
-        _gameOver(`Player ${ currentPlayer + 1 } wins!`);
+        let name = document.querySelector(`.player-name[id="${currentPlayer}"]`).value;
+        _gameOver(`${ name } wins!`);
         break;
     }
   }
@@ -272,7 +273,7 @@ const displayController = (() => {
     document.querySelector(".player[id='1']").classList.add("next-player");
     document.querySelector(".end-screen-container").classList.add("hidden");
 
-    computer.enable(false);
+    if (computer.getIsEnabled()) computer.enable(false);
   }
 
   const renderGameBoard = () => {
